@@ -25,7 +25,7 @@
         android:background="#005090" />
 
     <EditText
-        android:id="@+id/dataItem02"
+        android:id="@+id/dataItem_"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="5"
@@ -33,7 +33,9 @@
         android:hint="할일을 입력하세요"
         android:textAppearance="?android:textAppearanceMedium"
         android:textSize="15dp" />
-
+    <!--@+id/editText_twentythree
+    @+id/editText_eighteen
+    @+id/editText_six-->
     <View
         android:id="@+id/dataItem04"
         android:layout_width="1dp"

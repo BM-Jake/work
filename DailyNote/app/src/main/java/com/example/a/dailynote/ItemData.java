@@ -1,8 +1,5 @@
 package com.example.a.dailynote;
 
-import android.widget.Checkable;
-import android.widget.ImageView;
-
 public class ItemData {
     public String time;
     public String desc;
@@ -30,4 +27,5 @@ public class ItemData {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
 }

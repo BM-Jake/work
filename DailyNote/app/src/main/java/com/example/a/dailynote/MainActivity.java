@@ -1,24 +1,19 @@
 package com.example.a.dailynote;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Image;
 import android.nfc.Tag;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -34,10 +29,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
     //drawer visibility
     LinearLayout drawer;
     ImageButton btn_menu;
-    //돌아보기 버튼
+
+    //일주일돌아보기 버튼
     Button btn_lookback;
 
-    //floatingActionButton
-    //  FloatingActionButton fab;
+    //지난 일정 보기
+    Button btn_viewall;
 
     //alert dialog
     TextView text;
@@ -70,7 +63,19 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     MyAdapter myAdapter;
 
-    EditText inputView;
+    EditText EView;
+
+    //floatingActionButton
+    //  FloatingActionButton fab;
+
+    //DBhelper
+ /*   DatabaseHelper myDb;
+    EditText editone, edittwo, editthree, editfour, editfive, editsix, editseven, editeight, editnine, editten, editeleven, edittwelve, editthirteen,
+            editfourteen, editfifteen, editsixteen, editseventeen, editeightteen, editnineteen, edittwenty, edittwentyone, edittwentytwo, edittwentythree,
+            edittwentyfour;
+    Button btnAddData;
+    Button btnviewAll;*/
+
 
     @SuppressLint("WrongConstant")
     @Override
@@ -86,14 +91,13 @@ public class MainActivity extends AppCompatActivity {
         setupcal();
         setupmenu();
 
-        //다시보기
+        //일주일보기
         btn_lookback = (Button) findViewById(R.id.btn_lookback);
         btn_lookback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "돌아보기", 1000).show();
+                Toast.makeText(getApplicationContext(), "일주일 돌아보기", 1000).show();
                 Intent MyIntent = new Intent(MainActivity.this, Look_Back.class);
-                getIntent().putExtra("strbox",str);
                 startActivity(MyIntent);
             }
         });
@@ -108,17 +112,65 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }); */
-          text = (TextView) findViewById(R.id.text);
+
+        //지난일정보기
+        btn_viewall = (Button) findViewById(R.id.button_viewAll);
+        btn_viewall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "지난일정보기", 1000).show();
+                Intent My2Intent = new Intent(MainActivity.this, PastSchedule.class);
+                startActivity(My2Intent);
+            }
+        });
+
+
+        //평가한거 보이는거
+        // text = (TextView) findViewById(R.id.tmptext);
 
         //listView,Adapter
-        listView = (ListView)findViewById(R.id.listView1);
+        listView = (ListView) findViewById(R.id.listView1);
         myAdapter = new MyAdapter(this);
         listView.setAdapter(myAdapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        View ItemView= getLayoutInflater().inflate(R.layout.listitem,null);
-        inputView = (EditText)findViewById(R.id.dataItem02);
+        View ItemView = getLayoutInflater().inflate(R.layout.listitem, null);
+        EView = (EditText) findViewById(R.id.dataItem_);
         initData();
 
+
+        //db
+       /* myDb = new DatabaseHelper(this);
+
+        editone = (EditText) findViewById(R.id.editText_one);
+        edittwo = (EditText) findViewById(R.id.editText_two);
+        editthree = (EditText) findViewById(R.id.editText_three);
+        editfour = (EditText) findViewById(R.id.editText_four);
+        editfive = (EditText) findViewById(R.id.editText_five);
+        editsix = (EditText) findViewById(R.id.editText_six);
+        editseven = (EditText) findViewById(R.id.editText_seven);
+        editeight = (EditText) findViewById(R.id.editText_eight);
+        editnine = (EditText) findViewById(R.id.editText_nine);
+        editten = (EditText) findViewById(R.id.editText_ten);
+        editeleven = (EditText) findViewById(R.id.editText_eleven);
+        edittwelve = (EditText) findViewById(R.id.editText_twelve);
+        editthirteen = (EditText) findViewById(R.id.editText_thirteen);
+        editfourteen = (EditText) findViewById(R.id.editText_fourteen);
+        editfifteen = (EditText) findViewById(R.id.editText_fifteen);
+        editsixteen = (EditText) findViewById(R.id.editText_sixteen);
+        editseventeen = (EditText) findViewById(R.id.editText_seventeen);
+        editeightteen = (EditText) findViewById(R.id.editText_eighteen);
+        editnineteen = (EditText) findViewById(R.id.editText_nineteen);
+        edittwenty = (EditText) findViewById(R.id.editText_twenty);
+        edittwentyone = (EditText) findViewById(R.id.editText_twentyone);
+        edittwentytwo = (EditText) findViewById(R.id.editText_twentytwo);
+        edittwentythree = (EditText) findViewById(R.id.editText_twentythree);
+        edittwentyfour = (EditText) findViewById(R.id.editText_twentyfour);
+
+
+        btnAddData = (Button) findViewById(R.id.button_add);
+        btnviewAll = (Button) findViewById(R.id.button_viewAll);
+        AddData();
+        viewAll();*/
 
     } //oncreate
 
@@ -127,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
     public void mOnClick(View v) {
 
         switch (v.getId()) {
-            case R.id.tmpbtn://멤버 추가(데이터 추가)
+            case R.id.button_finishday://멤버 추가(데이터 추가)
 
                 //Dialog에서 보여줄 입력화면 View 객체 생성 작업
                 //Layout xml 리소스 파일을 View 객체로 부불려 주는(inflate) LayoutInflater 객체 생성
@@ -199,37 +251,87 @@ public class MainActivity extends AppCompatActivity {
 
     }//mOnClickMethod
 
-
-    //alert dialog show
-/*
-    void show() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        final EditText edittext = new EditText(MainActivity.this);
-        builder.setView(edittext);
-
-        builder.setTitle("오늘 하루를 끝내시겠습니까?");
-        builder.setMessage("진짜로?");
-        setContentView(edittext);
-
-        builder.setPositiveButton("예",
-                new DialogInterface.OnClickListener() {
+    //db method
+    /*public void AddData() {
+        btnAddData.setOnClickListener(
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
+                    public void onClick(View v) {
+                        boolean isInserted = myDb.insertData
+                                (editone.getText().toString(), edittwo.getText().toString(), editthree.getText().toString(),
+                                        editfour.getText().toString(), editfive.getText().toString(), editsix.getText().toString(),
+                                        editseven.getText().toString(), editeight.getText().toString(), editnine.getText().toString(),
+                                        editten.getText().toString(), editeleven.getText().toString(), edittwelve.getText().toString(),
+                                        editthirteen.getText().toString(), editfourteen.getText().toString(), editfifteen.getText().toString(),
+                                        editsixteen.getText().toString(), editseventeen.getText().toString(), editeightteen.getText().toString(),
+                                        editnineteen.getText().toString(), edittwenty.getText().toString(), edittwentyone.getText().toString(),
+                                        edittwentytwo.getText().toString(), edittwentythree.getText().toString(), edittwentyfour.getText().toString()
+                                );
 
+                        if (isInserted = true)
+                            Toast.makeText(MainActivity.this, "Data Inserted", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MainActivity.this, "Data not Inserted", Toast.LENGTH_LONG).show();
                     }
-                });
-        builder.setNegativeButton("아니오",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
-                    }
-                });
-       builder.show();
-
+                }
+        );
     }
-*/
+
+    public void viewAll() {
+        btnviewAll.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Cursor res = myDb.getAllData();
+                        if (res.getCount() == 0) {
+                            //show error message
+                            // showMessage("Error", "Nothing Found");
+                            return;
+                        }
+                        StringBuffer buffer = new StringBuffer();
+                        while (res.moveToNext()) {
+                            buffer.append("ID :" + res.getString(0) + "\n");
+                            buffer.append("one :" + res.getString(1) + "\n");
+                            buffer.append("two :" + res.getString(2) + "\n");
+                            buffer.append("three :" + res.getString(3) + "\n");
+                            buffer.append("four :" + res.getString(4) + "\n");
+                            buffer.append("five :" + res.getString(5) + "\n");
+                            buffer.append("six :" + res.getString(6) + "\n");
+                            buffer.append("seven :" + res.getString(7) + "\n");
+                            buffer.append("eight :" + res.getString(8) + "\n");
+                            buffer.append("nine :" + res.getString(9) + "\n");
+                            buffer.append("ten :" + res.getString(10) + "\n");
+                            buffer.append("eleven :" + res.getString(11) + "\n");
+                            buffer.append("twelve :" + res.getString(12) + "\n");
+                            buffer.append("thirteen :" + res.getString(13) + "\n");
+                            buffer.append("fourteen :" + res.getString(14) + "\n");
+                            buffer.append("fifteen :" + res.getString(15) + "\n");
+                            buffer.append("sixteen :" + res.getString(16) + "\n");
+                            buffer.append("seventeen :" + res.getString(17) + "\n");
+                            buffer.append("eighteen :" + res.getString(18) + "\n");
+                            buffer.append("nineteen :" + res.getString(19) + "\n");
+                            buffer.append("twenty :" + res.getString(20) + "\n");
+                            buffer.append("twentyone :" + res.getString(21) + "\n");
+                            buffer.append("twentytwo :" + res.getString(22) + "\n");
+                            buffer.append("twentythree :" + res.getString(23) + "\n");
+                            buffer.append("twentyfour :" + res.getString(24) + "\n\n");
+                        }
+                        //show all data
+                        //  showMessage("Data", buffer.toString());
+
+                    }
+                }
+        );
+    }*/
+
+ /*   public void showMessage(String title, String Message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
+    }  */
+
 
     //오늘 날짜 계산후 표시
     private String getTime() {
@@ -276,15 +378,20 @@ public class MainActivity extends AppCompatActivity {
     //listView,Adapter
     private void initData() {
         int a = 5;
-        for (int j = 0; j < 24 ; j++,a++) {
+        for (int j = 0; j < 24; j++, a++) {
             ItemData d = new ItemData();
-            if(a < 24 ) { a = a; } else { a = a-24; }
-            d.time = a + "시" + "~" + (a+1) + "시";
-            //d.desc =
+            if (a < 24) {
+                a = a;
+            } else {
+                a = a - 24;
+            }
+            d.time = a + "시" + "~" + (a + 1) + "시";
+            int b = j + 2;
+            EView = (EditText) listView.findViewById(b);
+
             myAdapter.add(d);
         }
     }
-
 
 
 }
